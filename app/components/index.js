@@ -2,9 +2,10 @@
  * Constants index
  *
  * @format
- * @flow strict-local
+ * @flow
  */
 
-import Patch from "./Patch";
+import patch from "./patch";
+import wheels from "./wheels";
 
-export {Patch};
+export {patch, wheels};

@@ -2,7 +2,7 @@
  * Asset constants object
  *
  * @format
- * @flow strict
+ * @flow
  */
 
 const assets = {

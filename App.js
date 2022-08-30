@@ -2,20 +2,25 @@
  * zzpotify
  *
  * @format
- * @flow strict-local
+ * @flow
  */
 
 import React from "react";
 import type {Node} from "react";
 import {Text} from "react-native";
 
-import {Patch} from "./app/components";
+import {assets} from "./app/constants";
+import {patch, wheels} from "./app/components";
 
-const App: () => Node = () => {
+const App = (): Node => {
     return (
-        <Patch.SafeAreaView style={{backgroundColor: "lavender"}}>
+        <patch.SafeAreaView style={{flex: 1, backgroundColor: "lavender"}}>
             <Text>Hello, World!</Text>
-        </Patch.SafeAreaView>
+            <wheels.CircleButton
+                icon={assets.icons.plus}
+                style={{position: "absolute", bottom: 8, right: 8}}
+            />
+        </patch.SafeAreaView>
     );
 };
 

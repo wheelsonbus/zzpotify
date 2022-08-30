@@ -2,7 +2,7 @@
  * Constants index
  *
  * @format
- * @flow strict
+ * @flow
  */
 
 import theme from "./theme";
