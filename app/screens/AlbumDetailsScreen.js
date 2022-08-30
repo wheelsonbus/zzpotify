@@ -1,5 +1,5 @@
 /**
- * Albums screen
+ * Album details screen
  *
  * @format
  * @flow
