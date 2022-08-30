@@ -7,10 +7,10 @@
 
 const theme = {
     palette: {
-        primary: "#4296b8",
-        secondary: "#2583a8",
-        tertiary: "#124060",
-        background: "#101820",
+        primary: "#ffd700",
+        secondary: "#ff6347",
+        tertiary: "#1e90ff",
+        background: "#1c273b",
     },
 };
 
