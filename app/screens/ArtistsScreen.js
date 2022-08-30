@@ -33,7 +33,7 @@ const ArtistsScreen = ({navigation}: any): Node => {
                     icon={assets.icons.arrowLeft}
                     onPress={() => navigation.goBack()}
                     style={{
-                        backgroundColor: theme.palette.secondary,
+                        backgroundColor: theme.palette.tertiary,
                         margin: 8,
                     }}
                 />
@@ -67,7 +67,12 @@ const ArtistsScreen = ({navigation}: any): Node => {
 
             <wheels.CircleButton
                 icon={assets.icons.plus}
-                style={{position: "absolute", bottom: 32, right: 32}}
+                style={{
+                    backgroundColor: theme.palette.tertiary,
+                    position: "absolute",
+                    bottom: 32,
+                    right: 32,
+                }}
             />
         </patch.SafeAreaView>
     );

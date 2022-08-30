@@ -33,7 +33,7 @@ const AlbumsScreen = ({navigation}: any): Node => {
                     icon={assets.icons.arrowLeft}
                     onPress={() => navigation.goBack()}
                     style={{
-                        backgroundColor: theme.palette.secondary,
+                        backgroundColor: theme.palette.tertiary,
                         margin: 8,
                     }}
                 />
