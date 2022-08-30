@@ -1,5 +1,5 @@
 /**
- * zzpotify
+ * zzpotify: abstract your music
  *
  * @format
  * @flow
@@ -16,7 +16,9 @@ const App = (): Node => {
     return (
         <patch.SafeAreaView style={{flex: 1, backgroundColor: "lavender"}}>
             <Text>Hello, World!</Text>
+            <wheels.SpanButton text="Log In" />
             <wheels.CircleButton
+                size={120}
                 icon={assets.icons.plus}
                 style={{position: "absolute", bottom: 8, right: 8}}
             />
