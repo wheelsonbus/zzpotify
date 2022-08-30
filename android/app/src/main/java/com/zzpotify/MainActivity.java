@@ -4,6 +4,8 @@ import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
 
+import android.os.Bundle; // Required by react-native-screens
+
 public class MainActivity extends ReactActivity {
   /**
    * Required by react-native-screens
