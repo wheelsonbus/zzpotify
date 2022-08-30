@@ -92,7 +92,7 @@ const AlbumDetailsScreen = ({route, navigation}: any): Node => {
                     }}
                 >
                     <wheels.CircleButton
-                        size={64}
+                        size={56}
                         icon={assets.icons.arrowLeft}
                         onPress={() => navigation.goBack()}
                         style={{
