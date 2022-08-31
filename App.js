@@ -21,8 +21,8 @@ import {
     AlbumDetailsScreen,
 } from "./app/screens";
 
-import MusicContext from "./app/data/realm";
-const {RealmProvider} = MusicContext;
+import RealmContext from "./app/data/realm";
+const {RealmProvider} = RealmContext;
 
 const stack = createNativeStackNavigator();
 

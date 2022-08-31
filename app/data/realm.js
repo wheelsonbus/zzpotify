@@ -1,47 +1,85 @@
-import {createRealmContext} from "@realm/react";
+/**
+ * Realm source
+ *
+ * @format
+ */
 
-const Artist = {
-    name: "Artist",
-    primaryKey: "_id",
-    properties: {
-        _id: "int",
-        name: "string",
-        albums: "Album[]",
-    },
-};
+import Realm, {createRealmContext} from "@realm/react";
+import "react-native-get-random-values";
+import {v4 as uuid} from "uuid";
 
-const Album = {
-    name: "Album",
-    primaryKey: "_id",
-    properties: {
-        _id: "int",
-        title: "string",
-        date: "string",
-        cover: "string",
-        tracks: "Track[]",
-        artist: {
-            type: "linkingObjects",
-            objectType: "Artist",
-            property: "albums",
+export class Artist {
+    static generate(artist) {
+        return {
+            _id: uuid(),
+            name: artist.name,
+            albums: [],
+        };
+    }
+
+    static schema = {
+        name: "Artist",
+        primaryKey: "_id",
+        properties: {
+            _id: "string",
+            name: "string",
+            albums: "Album[]",
         },
-    },
-};
+    };
+}
 
-const Track = {
-    name: "Track",
-    primaryKey: "_id",
-    properties: {
-        _id: "int",
-        title: "string",
-        album: {
-            type: "linkingObjects",
-            objectType: "Album",
-            property: "tracks",
+export class Album {
+    static generate(album) {
+        return {
+            _id: uuid(),
+            title: album.title,
+            date: album.date,
+            cover: album.cover,
+            tracks: [],
+        };
+    }
+
+    static schema = {
+        name: "Album",
+        primaryKey: "_id",
+        properties: {
+            _id: "string",
+            title: "string",
+            date: "string",
+            cover: "string",
+            tracks: "Track[]",
+            artist: {
+                type: "linkingObjects",
+                objectType: "Artist",
+                property: "albums",
+            },
         },
-    },
-};
+    };
+}
 
-const config = {
-    schema: [Artist, Album, Track],
-};
-export default createRealmContext(config);
+export class Track {
+    static generate(track) {
+        return {
+            _id: uuid(),
+            title: track.title,
+        };
+    }
+
+    static schema = {
+        name: "Track",
+        primaryKey: "_id",
+        properties: {
+            _id: "string",
+            title: "string",
+            album: {
+                type: "linkingObjects",
+                objectType: "Album",
+                property: "tracks",
+            },
+        },
+    };
+}
+
+export default createRealmContext({
+    schema: [Artist.schema, Album.schema, Track.schema],
+});
