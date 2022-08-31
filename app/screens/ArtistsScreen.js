@@ -46,6 +46,7 @@ const ArtistsScreen = ({navigation}: any): Node => {
                     }}
                 />
                 <Text
+                    numberOfLines={1}
                     style={{
                         fontSize: 48,
                         fontWeight: "bold",
@@ -80,8 +81,9 @@ const ArtistsScreen = ({navigation}: any): Node => {
                                 aspectRatio: 1 / 1,
                             }}
                         />
-                        <View style={{marginLeft: 16}}>
+                        <View style={{flex: 1, marginLeft: 16}}>
                             <Text
+                                numberOfLines={1}
                                 style={{
                                     fontSize: 24,
                                     fontWeight: "bold",
@@ -91,6 +93,7 @@ const ArtistsScreen = ({navigation}: any): Node => {
                                 {item.name}
                             </Text>
                             <Text
+                                numberOfLines={1}
                                 style={{
                                     fontSize: 16,
                                     color: "white",
@@ -101,7 +104,7 @@ const ArtistsScreen = ({navigation}: any): Node => {
                         </View>
                     </View>
                 )}
-            ></FlatList>
+            />
 
             <wheels.CircleButton
                 icon={assets.icons.plus}

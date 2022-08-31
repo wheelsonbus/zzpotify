@@ -7,7 +7,7 @@
 
 import React, {useMemo} from "react";
 import type {Node} from "react";
-import {View, FlatList, Image, Text} from "react-native";
+import {View, FlatList, Image, Text, TouchableOpacity} from "react-native";
 
 import {assets, theme} from "../constants";
 import {patch, wheels} from "../components";
@@ -17,7 +17,7 @@ const {useQuery} = RealmContext;
 
 const AlbumsScreen = ({navigation}: any): Node => {
     const albumQuery = useQuery("Album");
-    const albums = useMemo(() => albumQuery.sorted("title"), [albumQuery]);
+    const albums = useMemo(() => albumQuery, [albumQuery]);
 
     return (
         <patch.SafeAreaView
@@ -44,6 +44,7 @@ const AlbumsScreen = ({navigation}: any): Node => {
                     }}
                 />
                 <Text
+                    numberOfLines={1}
                     style={{
                         fontSize: 48,
                         fontWeight: "bold",
@@ -59,7 +60,12 @@ const AlbumsScreen = ({navigation}: any): Node => {
                 data={albums}
                 keyExtractor={(item): string => item._id}
                 renderItem={({item, index}) => (
-                    <View
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigation.navigate("AlbumDetails", {
+                                _id: item._id,
+                            });
+                        }}
                         style={{
                             flex: 1,
                             flexDirection: "row",
@@ -114,9 +120,9 @@ const AlbumsScreen = ({navigation}: any): Node => {
                                 {item.tracks.length + " track(s)"}
                             </Text>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 )}
-            ></FlatList>
+            />
         </patch.SafeAreaView>
     );
 };

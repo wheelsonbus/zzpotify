@@ -12,6 +12,7 @@ import {Image, TouchableOpacity} from "react-native";
 const CircleButton = ({size = 80, icon, onPress, style}: any): Node => {
     return (
         <TouchableOpacity
+            onPress={onPress}
             style={{
                 justifyContent: "center",
                 alignItems: "center",
@@ -22,7 +23,6 @@ const CircleButton = ({size = 80, icon, onPress, style}: any): Node => {
                 height: size,
                 borderRadius: size / 2,
             }}
-            onPress={onPress}
         >
             <Image
                 source={icon}

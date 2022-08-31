@@ -12,6 +12,7 @@ import {Text, TouchableOpacity} from "react-native";
 const SpanButton = ({text, onPress, style}: Object): Node => {
     return (
         <TouchableOpacity
+            onPress={onPress}
             style={{
                 width: "100%",
                 height: 80,
@@ -20,7 +21,6 @@ const SpanButton = ({text, onPress, style}: Object): Node => {
                 backgroundColor: "black",
                 ...style,
             }}
-            onPress={onPress}
         >
             <Text
                 style={{

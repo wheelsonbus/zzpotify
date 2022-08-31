@@ -7,13 +7,17 @@
 
 import React from "react";
 import type {Node} from "react";
-import {View, ScrollView, Text, Image} from "react-native";
+import {View, FlatList, Text, Image} from "react-native";
 
 import {theme, assets} from "../constants";
 import {patch, wheels} from "../components";
 
+import RealmContext from "../data/realm";
+const {useObject} = RealmContext;
+
 const AlbumDetailsScreen = ({route, navigation}: any): Node => {
-    const {album} = route.params;
+    const {_id} = route.params;
+    const album = useObject("Album", _id);
 
     return (
         <patch.SafeAreaView
@@ -22,83 +26,125 @@ const AlbumDetailsScreen = ({route, navigation}: any): Node => {
                 backgroundColor: theme.palette.background,
             }}
         >
-            {/*<ScrollView>
-                <Image
-                    source={{uri: album.cover}}
-                    style={{
-                        width: "100%",
-                        height: undefined,
-                        aspectRatio: 1,
-                        borderRadius: 16,
-                    }}
-                ></Image>
-                <View
-                    style={{
-                        width: "100%",
-                        height: 96,
-                        flex: 1,
-                        flexDirection: "row",
-                        alignItems: "center",
-                    }}
-                >
-                    <Text style={{margin: 16}}>
-                        <Text
-                            numberOfLines={1}
+            <FlatList
+                ListHeaderComponent={() => (
+                    <View>
+                        <Image
+                            source={{uri: album.cover}}
                             style={{
-                                fontSize: 32,
-                                fontWeight: "bold",
-                                color: "white",
+                                width: "100%",
+                                height: undefined,
+                                aspectRatio: 1,
                             }}
-                        >
-                            {album.title}
-                        </Text>
-                        {"\n"}
-                        <Text
-                            numberOfLines={1}
-                            style={{
-                                fontSize: 16,
-                                color: "white",
-                            }}
-                        >
-                            {album.artist.name + " (" + album.date + ")"}
-                        </Text>
-                    </Text>
-                </View>
-                {album.tracks.map((track, index) => {
-                    return (
+                        />
                         <View
-                            key={index}
                             style={{
-                                margin: 8,
-                                marginTop: index > 0 ? 0 : 8,
+                                width: "100%",
+                                height: 96,
+                                flex: 1,
+                                flexDirection: "row",
+                                alignItems: "center",
                             }}
                         >
-                            <TrackCard track={track} />
+                            <View style={{flex: 1, margin: 16}}>
+                                <Text
+                                    numberOfLines={1}
+                                    style={{
+                                        fontSize: 32,
+                                        fontWeight: "bold",
+                                        color: "white",
+                                    }}
+                                >
+                                    {album.title}
+                                </Text>
+                                <Text
+                                    numberOfLines={1}
+                                    style={{
+                                        fontSize: 16,
+                                        color: "white",
+                                    }}
+                                >
+                                    {album.artist[0].name +
+                                        " (" +
+                                        album.date +
+                                        ")"}
+                                </Text>
+                            </View>
                         </View>
-                    );
-                })}
-            </ScrollView>*/}
+                    </View>
+                )}
+                data={album.tracks}
+                keyExtractor={(item): string => item._id}
+                renderItem={({item, index}) => (
+                    <View
+                        style={{
+                            flex: 1,
+                            flexDirection: "row",
+                            padding: 16,
+                            backgroundColor:
+                                index % 2
+                                    ? theme.palette.background
+                                    : theme.palette.background2,
+                        }}
+                    >
+                        <View>
+                            <Text
+                                style={{
+                                    fontSize: 16,
+                                    fontWeight: "bold",
+                                    color: "white",
+                                }}
+                            >
+                                {(index + 1).toString().padStart(2, "0")}
+                            </Text>
+                        </View>
 
-            <View style={{flex: 1}}>
-                <View
+                        <View style={{flex: 1, marginLeft: 16}}>
+                            <Text
+                                numberOfLines={1}
+                                style={{
+                                    fontSize: 16,
+                                    color: "white",
+                                }}
+                            >
+                                {item.title}
+                            </Text>
+                        </View>
+                    </View>
+                )}
+            />
+
+            <View
+                style={{
+                    flexDirection: "row",
+                    width: "100%",
+                    height: 80,
+                    alignItems: "center",
+                    position: "absolute",
+                }}
+            >
+                <wheels.CircleButton
+                    size={56}
+                    icon={assets.icons.arrowLeft}
+                    onPress={() => navigation.goBack()}
                     style={{
-                        flexDirection: "row",
-                        width: "100%",
-                        height: 80,
-                        alignItems: "center",
-                        position: "absolute",
+                        backgroundColor: theme.palette.tertiary,
+                        margin: 8,
+                    }}
+                />
+
+                <Text
+                    numberOfLines={1}
+                    style={{
+                        fontSize: 48,
+                        fontWeight: "bold",
+                        color: "white",
+                        margin: 8,
+                        opacity: 0,
                     }}
                 >
-                    <wheels.CircleButton
-                        size={56}
-                        icon={assets.icons.arrowLeft}
-                        onPress={() => navigation.goBack()}
-                        style={{
-                            backgroundColor: theme.palette.tertiary,
-                            margin: 8,
-                        }}
-                    />
-                </View>
+                    Album Details
+                </Text>
             </View>
         </patch.SafeAreaView>
     );
