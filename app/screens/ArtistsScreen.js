@@ -50,7 +50,6 @@ const ArtistsScreen = ({navigation}: any): Node => {
                         fontSize: 48,
                         fontWeight: "bold",
                         color: "white",
-                        opacity: 0.67,
                         margin: 8,
                     }}
                 >

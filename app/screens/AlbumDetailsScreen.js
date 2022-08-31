@@ -48,7 +48,6 @@ const AlbumDetailsScreen = ({route, navigation}: any): Node => {
                                 fontSize: 32,
                                 fontWeight: "bold",
                                 color: "white",
-                                opacity: 0.67,
                             }}
                         >
                             {album.title}
@@ -59,7 +58,6 @@ const AlbumDetailsScreen = ({route, navigation}: any): Node => {
                             style={{
                                 fontSize: 16,
                                 color: "white",
-                                opacity: 0.67,
                             }}
                         >
                             {album.artist.name + " (" + album.date + ")"}
