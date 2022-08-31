@@ -13,6 +13,7 @@ export class Artist {
         return {
             _id: uuid(),
             name: artist.name,
+            image: artist.image,
             albums: [],
         };
     }
@@ -23,6 +24,7 @@ export class Artist {
         properties: {
             _id: "string",
             name: "string",
+            image: "string",
             albums: "Album[]",
         },
     };
