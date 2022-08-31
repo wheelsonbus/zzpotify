@@ -34,12 +34,12 @@ const WelcomeScreen = ({navigation}: any): Node => {
                 source={require("../assets/icon.png")}
             />
             <wheels.SpanButton
-                text="Log In"
+                text="Artists"
                 onPress={() => navigation.navigate("Artists")}
                 style={{backgroundColor: theme.palette.secondary}}
             />
             <wheels.SpanButton
-                text="Sign Up"
+                text="Albums"
                 onPress={() => navigation.navigate("Albums")}
                 style={{backgroundColor: theme.palette.primary}}
             />

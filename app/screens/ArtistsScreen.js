@@ -18,8 +18,8 @@ const {useRealm, useQuery} = RealmContext;
 
 const ArtistsScreen = ({navigation}: any): Node => {
     const realm = useRealm();
-    const artistsQuery = useQuery("Artist");
-    const artists = useMemo(() => artistsQuery.sorted("name"), [artistsQuery]);
+    const artistQuery = useQuery("Artist");
+    const artists = useMemo(() => artistQuery.sorted("name"), [artistQuery]);
 
     return (
         <patch.SafeAreaView
@@ -80,24 +80,25 @@ const ArtistsScreen = ({navigation}: any): Node => {
                                 aspectRatio: 1 / 1,
                             }}
                         />
-                        <Text style={{marginLeft: 16, color: "white"}}>
+                        <View style={{marginLeft: 16}}>
                             <Text
                                 style={{
                                     fontSize: 24,
                                     fontWeight: "bold",
+                                    color: "white",
                                 }}
                             >
                                 {item.name}
                             </Text>
-                            {"\n"}
                             <Text
                                 style={{
                                     fontSize: 16,
+                                    color: "white",
                                 }}
                             >
                                 {item.albums.length + " album(s)"}
                             </Text>
-                        </Text>
+                        </View>
                     </View>
                 )}
             ></FlatList>

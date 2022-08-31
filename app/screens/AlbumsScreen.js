@@ -5,14 +5,20 @@
  * @flow
  */
 
-import React from "react";
+import React, {useMemo} from "react";
 import type {Node} from "react";
-import {View, ScrollView, Text} from "react-native";
+import {View, FlatList, Image, Text} from "react-native";
 
 import {assets, theme} from "../constants";
 import {patch, wheels} from "../components";
 
+import RealmContext from "../data/realm";
+const {useQuery} = RealmContext;
+
 const AlbumsScreen = ({navigation}: any): Node => {
+    const albumQuery = useQuery("Album");
+    const albums = useMemo(() => albumQuery.sorted("title"), [albumQuery]);
+
     return (
         <patch.SafeAreaView
             style={{
@@ -48,27 +54,69 @@ const AlbumsScreen = ({navigation}: any): Node => {
                     Albums
                 </Text>
             </View>
-            {/*<ScrollView>
-                {data.artists.map((artist, i) => {
-                    return (
-                        <View key={i}>
-                            {artist.albums.map((album, j) => {
-                                return (
-                                    <View
-                                        key={j}
-                                        style={{
-                                            margin: 8,
-                                            marginTop: i > 0 ? 0 : 8,
-                                        }}
-                                    >
-                                        <AlbumCard album={album} />
-                                    </View>
-                                );
-                            })}
+
+            <FlatList
+                data={albums}
+                keyExtractor={(item): string => item._id}
+                renderItem={({item, index}) => (
+                    <View
+                        style={{
+                            flex: 1,
+                            flexDirection: "row",
+                            padding: 16,
+                            backgroundColor:
+                                index % 2
+                                    ? theme.palette.background
+                                    : theme.palette.background2,
+                        }}
+                    >
+                        <Image
+                            source={{uri: item.cover}}
+                            resizeMode="cover"
+                            style={{
+                                width: undefined,
+                                height: "100%",
+                                aspectRatio: 1 / 1,
+                            }}
+                        />
+                        <View
+                            style={{
+                                flex: 1,
+                                marginLeft: 16,
+                            }}
+                        >
+                            <Text
+                                numberOfLines={1}
+                                style={{
+                                    fontSize: 16,
+                                    fontWeight: "bold",
+                                    color: "white",
+                                }}
+                            >
+                                {item.title}
+                            </Text>
+                            <Text
+                                numberOfLines={1}
+                                style={{
+                                    fontSize: 16,
+                                    color: "white",
+                                }}
+                            >
+                                {item.date}
+                            </Text>
+                            <Text
+                                numberOfLines={1}
+                                style={{
+                                    fontSize: 16,
+                                    color: "white",
+                                }}
+                            >
+                                {item.tracks.length + " track(s)"}
+                            </Text>
                         </View>
-                    );
-                })}
-            </ScrollView>*/}
+                    </View>
+                )}
+            ></FlatList>
         </patch.SafeAreaView>
     );
 };

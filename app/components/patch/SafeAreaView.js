@@ -14,7 +14,6 @@ const SafeAreaView = (props: any): Node => {
         <_SafeAreaView
             style={{
                 marginTop: 8,
-                //Platform.OS === "android" ? StatusBar.currentHeight : 0,
             }}
             {...props}
         />
