@@ -13,7 +13,7 @@ import {Discogs} from "@wheelsonbus/abstract-music";
 import {assets, theme} from "../constants";
 import {patch, wheels} from "../components";
 
-import RealmContext, {Artist, Album, EP, Single, Track} from "../data/realm";
+import RealmContext, {Artist, Release, Track} from "../data/realm";
 const {useRealm, useQuery} = RealmContext;
 
 const ArtistsScreen = ({navigation}: any): Node => {
@@ -62,32 +62,14 @@ const ArtistsScreen = ({navigation}: any): Node => {
                 keyExtractor={(item): string => item._id}
                 renderItem={({item, index}) => {
                     let subtitle = [];
-                    if (item.albums.length) {
-                        if (item.albums.length == 1) {
-                            subtitle.push("1 album");
+                    if (item.releases.length) {
+                        if (item.releases.length == 1) {
+                            subtitle = "1 release";
                         } else {
-                            subtitle.push(item.albums.length + " albums");
+                            subtitle = item.releases.length + " releases";
                         }
-                    }
-                    if (item.eps.length) {
-                        if (item.eps.length == 1) {
-                            subtitle.push("1 EP");
-                        } else {
-                            subtitle.push(item.eps.length + " EPs");
-                        }
-                    }
-                    if (item.singles.length) {
-                        if (item.singles.length == 1) {
-                            subtitle.push("1 single");
-                        } else {
-                            subtitle.push(item.singles.length + " singles");
-                        }
-                    }
-
-                    if (!subtitle.length) {
-                        subtitle = "No releases";
                     } else {
-                        subtitle = subtitle.join("    ");
+                        subtitle = "No releases";
                     }
 
                     return (
@@ -141,7 +123,7 @@ const ArtistsScreen = ({navigation}: any): Node => {
                         "tDkXKPEgaoCSdTPHSxSCdYKUhgdEmZiN",
                     );
 
-                    const artistId = "5762374";
+                    const artistId = "557974";
                     console.log(
                         "Fetching Artist " + artistId + " from Discogs",
                     );
@@ -161,70 +143,29 @@ const ArtistsScreen = ({navigation}: any): Node => {
                                     },
                                 );
 
-                                let tracks = [];
-                                let duration = 0;
-                                let maxDuration = 0;
+                                const release = realm.create(
+                                    "Release",
+                                    Release.generate(_release),
+                                );
                                 _release.tracks.forEach((_track) => {
-                                    tracks.push(
-                                        realm.create(
-                                            "Track",
-                                            Track.generate(_track),
-                                        ),
+                                    const track = realm.create(
+                                        "Track",
+                                        Track.generate(_track),
                                     );
-                                    duration += _track.duration;
-                                    maxDuration = Math.max(
-                                        _track.duration,
-                                        maxDuration,
-                                    );
+                                    release.tracks.push(track);
                                 });
 
-                                if (
-                                    duration < 30 * 60 &&
-                                    ((tracks.length <= 3 &&
-                                        maxDuration >= 10 * 60) ||
-                                        (tracks.length >= 4 &&
-                                            tracks.length <= 6))
-                                ) {
-                                    const release = realm.create(
-                                        "EP",
-                                        Album.generate(_release),
-                                    );
-                                    tracks.forEach((track) => {
-                                        release.tracks.push(track);
-                                    });
-                                    artist.eps.push(release);
-                                } else if (
-                                    duration < 30 * 60 &&
-                                    tracks.length <= 3
-                                ) {
-                                    const release = realm.create(
-                                        "Single",
-                                        Album.generate(_release),
-                                    );
-                                    tracks.forEach((track) => {
-                                        release.tracks.push(track);
-                                    });
-                                    artist.singles.push(release);
-                                } else {
-                                    const release = realm.create(
-                                        "Album",
-                                        Album.generate(_release),
-                                    );
-                                    tracks.forEach((track) => {
-                                        release.tracks.push(track);
-                                    });
-                                    artist.albums.push(release);
-                                }
+                                artist.releases.push(release);
                             });
                             console.log(artist);
                         });
                     });
                 }}
                 style={{
-                    backgroundColor: theme.palette.tertiary,
+                    backgroundColor: theme.palette.primary,
                     position: "absolute",
-                    bottom: 32,
-                    right: 32,
+                    bottom: 16,
+                    right: 16,
                 }}
             />
         </patch.SafeAreaView>

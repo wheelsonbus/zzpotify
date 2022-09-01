@@ -16,7 +16,7 @@ import RealmContext from "../data/realm";
 const {useQuery} = RealmContext;
 
 const AlbumsScreen = ({navigation}: any): Node => {
-    const albumQuery = useQuery("Album");
+    const albumQuery = useQuery("Release");
     const albums = useMemo(() => albumQuery, [albumQuery]);
 
     return (

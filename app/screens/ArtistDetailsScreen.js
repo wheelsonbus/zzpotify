@@ -18,6 +18,9 @@ const {useObject} = RealmContext;
 const ArtistDetailsScreen = ({route, navigation}: any): Node => {
     const {_id} = route.params;
     const artist = useObject("Artist", _id);
+    const albums = artist.releases.filtered("type == 'album'");
+    const eps = artist.releases.filtered("type == 'ep'");
+    const singles = artist.releases.filtered("type == 'single'");
 
     return (
         <patch.SafeAreaView
@@ -28,32 +31,32 @@ const ArtistDetailsScreen = ({route, navigation}: any): Node => {
         >
             <SectionList
                 sections={[
-                    {title: "Albums", schema: "Album", data: artist.albums},
-                    {title: "EPs", schema: "EP", data: artist.eps},
-                    {title: "Singles", schema: "Single", data: artist.singles},
+                    {title: "Albums", data: albums},
+                    {title: "EPs", data: eps},
+                    {title: "Singles", data: singles},
                 ]}
                 keyExtractor={(item): string => item._id}
                 ListHeaderComponent={() => {
                     let subtitle = [];
-                    if (artist.albums.length) {
-                        if (artist.albums.length == 1) {
+                    if (albums.length) {
+                        if (albums.length == 1) {
                             subtitle.push("1 album");
                         } else {
-                            subtitle.push(artist.albums.length + " albums");
+                            subtitle.push(albums.length + " albums");
                         }
                     }
-                    if (artist.eps.length) {
-                        if (artist.eps.length == 1) {
+                    if (eps.length) {
+                        if (eps.length == 1) {
                             subtitle.push("1 EP");
                         } else {
-                            subtitle.push(artist.eps.length + " EPs");
+                            subtitle.push(eps.length + " EPs");
                         }
                     }
-                    if (artist.singles.length) {
-                        if (artist.singles.length == 1) {
+                    if (singles.length) {
+                        if (singles.length == 1) {
                             subtitle.push("1 single");
                         } else {
-                            subtitle.push(artist.singles.length + " singles");
+                            subtitle.push(singles.length + " singles");
                         }
                     }
 
@@ -130,7 +133,6 @@ const ArtistDetailsScreen = ({route, navigation}: any): Node => {
                     <TouchableOpacity
                         onPress={() => {
                             navigation.navigate("ReleaseDetails", {
-                                schema: section.schema,
                                 _id: item._id,
                             });
                         }}

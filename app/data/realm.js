@@ -13,7 +13,7 @@ export class Artist {
         return {
             _id: uuid(),
             name: artist.name,
-            albums: [],
+            releases: [],
         };
     }
 
@@ -23,26 +23,48 @@ export class Artist {
         properties: {
             _id: "string",
             name: "string",
-            albums: "Album[]",
-            eps: "EP[]",
-            singles: "Single[]",
+            releases: "Release[]",
         },
     };
 }
 
-export class Album {
-    static generate(album) {
+export class Release {
+    static generate(release) {
+        let type = release.type;
+
+        if (type == null) {
+            let duration = 0;
+            let maxDuration = 0;
+            release.tracks.forEach((track) => {
+                duration += track.duration;
+                maxDuration = Math.max(track.duration, maxDuration);
+            });
+
+            if (
+                duration < 30 * 60 &&
+                ((release.tracks.length <= 3 && maxDuration >= 10 * 60) ||
+                    (release.tracks.length >= 4 && release.tracks.length <= 6))
+            ) {
+                type = "ep";
+            } else if (duration < 30 * 60 && release.tracks.length <= 3) {
+                type = "single";
+            } else {
+                type = "album";
+            }
+        }
+
         return {
             _id: uuid(),
-            title: album.title,
-            date: album.date,
-            cover: album.cover,
+            title: release.title,
+            date: release.date,
+            cover: release.cover,
             tracks: [],
+            type: type,
         };
     }
 
     static schema = {
-        name: "Album",
+        name: "Release",
         primaryKey: "_id",
         properties: {
             _id: "string",
@@ -53,66 +75,9 @@ export class Album {
             artist: {
                 type: "linkingObjects",
                 objectType: "Artist",
-                property: "albums",
+                property: "releases",
             },
-        },
-    };
-}
-
-export class EP {
-    static generate(ep) {
-        return {
-            _id: uuid(),
-            title: ep.title,
-            date: ep.date,
-            cover: ep.cover,
-            tracks: [],
-        };
-    }
-
-    static schema = {
-        name: "EP",
-        primaryKey: "_id",
-        properties: {
-            _id: "string",
-            title: "string",
-            date: "string",
-            cover: "string",
-            tracks: "Track[]",
-            artist: {
-                type: "linkingObjects",
-                objectType: "Artist",
-                property: "eps",
-            },
-        },
-    };
-}
-
-export class Single {
-    static generate(single) {
-        return {
-            _id: uuid(),
-            title: single.title,
-            date: single.date,
-            cover: single.cover,
-            tracks: [],
-        };
-    }
-
-    static schema = {
-        name: "Single",
-        primaryKey: "_id",
-        properties: {
-            _id: "string",
-            title: "string",
-            date: "string",
-            cover: "string",
-            tracks: "Track[]",
-            artist: {
-                type: "linkingObjects",
-                objectType: "Artist",
-                property: "singles",
-            },
+            type: "string",
         },
     };
 }
@@ -133,16 +98,15 @@ export class Track {
             _id: "string",
             title: "string",
             duration: "int",
+            release: {
+                type: "linkingObjects",
+                objectType: "Release",
+                property: "tracks",
+            },
         },
     };
 }
 
 export default createRealmContext({
-    schema: [
-        Artist.schema,
-        Album.schema,
-        EP.schema,
-        Single.schema,
-        Track.schema,
-    ],
+    schema: [Artist.schema, Release.schema, Track.schema],
 });

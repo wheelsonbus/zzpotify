@@ -16,8 +16,8 @@ import RealmContext from "../data/realm";
 const {useObject} = RealmContext;
 
 const ReleaseDetailsScreen = ({route, navigation}: any): Node => {
-    const {schema, _id} = route.params;
-    const release = useObject(schema, _id);
+    const {_id} = route.params;
+    const release = useObject("Release", _id);
 
     const [coverAspectRatio, setCoverAspectRatio] = useState(1);
     Image.getSize(release.cover, (width, height) => {
