@@ -121,6 +121,12 @@ const ArtistsScreen = ({navigation}: any): Node => {
                             );
 
                             _artist.releases.forEach((_release) => {
+                                Image.prefetch(_release.cover).catch(
+                                    (error) => {
+                                        console.error(error);
+                                    },
+                                );
+
                                 let tracks = [];
                                 let duration = 0;
                                 let maxDuration = 0;

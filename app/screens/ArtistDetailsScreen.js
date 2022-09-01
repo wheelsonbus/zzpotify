@@ -7,7 +7,7 @@
 
 import React from "react";
 import type {Node} from "react";
-import {View, FlatList, Text, Image, TouchableOpacity} from "react-native";
+import {View, SectionList, Text, Image, TouchableOpacity} from "react-native";
 
 import {theme, assets} from "../constants";
 import {patch, wheels} from "../components";
@@ -26,7 +26,7 @@ const ArtistDetailsScreen = ({route, navigation}: any): Node => {
                 backgroundColor: theme.palette.background,
             }}
         >
-            <FlatList
+            <SectionList
                 ListHeaderComponent={() => (
                     <View>
                         <Image
@@ -64,8 +64,26 @@ const ArtistDetailsScreen = ({route, navigation}: any): Node => {
                         </View>
                     </View>
                 )}
-                data={artist.albums}
+                sections={[
+                    {title: "Albums", data: artist.albums},
+                    {title: "EPs", data: artist.eps},
+                    {title: "Singles", data: artist.singles},
+                ]}
                 keyExtractor={(item): string => item._id}
+                renderSectionHeader={({section: {title}}) => (
+                    <View style={{flex: 1, margin: 16}}>
+                        <Text
+                            numberOfLines={1}
+                            style={{
+                                fontSize: 24,
+                                fontWeight: "bold",
+                                color: "white",
+                            }}
+                        >
+                            {title}
+                        </Text>
+                    </View>
+                )}
                 renderItem={({item, index}) => (
                     <TouchableOpacity
                         onPress={() => {
