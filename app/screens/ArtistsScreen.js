@@ -60,46 +60,77 @@ const ArtistsScreen = ({navigation}: any): Node => {
             <FlatList
                 data={artists}
                 keyExtractor={(item): string => item._id}
-                renderItem={({item, index}) => (
-                    <TouchableOpacity
-                        onPress={() => {
-                            navigation.navigate("ArtistDetails", {
-                                _id: item._id,
-                            });
-                        }}
-                        style={{
-                            flex: 1,
-                            flexDirection: "row",
-                            padding: 16,
-                            backgroundColor:
-                                index % 2
-                                    ? theme.palette.background
-                                    : theme.palette.background2,
-                        }}
-                    >
-                        <View style={{flex: 1}}>
-                            <Text
-                                numberOfLines={1}
-                                style={{
-                                    fontSize: 24,
-                                    fontWeight: "bold",
-                                    color: "white",
-                                }}
-                            >
-                                {item.name}
-                            </Text>
-                            <Text
-                                numberOfLines={1}
-                                style={{
-                                    fontSize: 16,
-                                    color: "white",
-                                }}
-                            >
-                                {item.albums.length + " album(s)"}
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-                )}
+                renderItem={({item, index}) => {
+                    let subtitle = [];
+                    if (item.albums.length) {
+                        if (item.albums.length == 1) {
+                            subtitle.push("1 album");
+                        } else {
+                            subtitle.push(item.albums.length + " albums");
+                        }
+                    }
+                    if (item.eps.length) {
+                        if (item.eps.length == 1) {
+                            subtitle.push("1 EP");
+                        } else {
+                            subtitle.push(item.eps.length + " EPs");
+                        }
+                    }
+                    if (item.singles.length) {
+                        if (item.singles.length == 1) {
+                            subtitle.push("1 single");
+                        } else {
+                            subtitle.push(item.singles.length + " singles");
+                        }
+                    }
+
+                    if (!subtitle.length) {
+                        subtitle = "No releases";
+                    } else {
+                        subtitle = subtitle.join("    ");
+                    }
+
+                    return (
+                        <TouchableOpacity
+                            onPress={() => {
+                                navigation.navigate("ArtistDetails", {
+                                    _id: item._id,
+                                });
+                            }}
+                            style={{
+                                flex: 1,
+                                flexDirection: "row",
+                                padding: 16,
+                                backgroundColor:
+                                    index % 2
+                                        ? theme.palette.background
+                                        : theme.palette.background2,
+                            }}
+                        >
+                            <View style={{flex: 1}}>
+                                <Text
+                                    numberOfLines={1}
+                                    style={{
+                                        fontSize: 24,
+                                        fontWeight: "bold",
+                                        color: "white",
+                                    }}
+                                >
+                                    {item.name}
+                                </Text>
+                                <Text
+                                    numberOfLines={1}
+                                    style={{
+                                        fontSize: 16,
+                                        color: "white",
+                                    }}
+                                >
+                                    {subtitle}
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    );
+                }}
             />
 
             <wheels.CircleButton
@@ -110,8 +141,11 @@ const ArtistsScreen = ({navigation}: any): Node => {
                         "tDkXKPEgaoCSdTPHSxSCdYKUhgdEmZiN",
                     );
 
-                    console.log("Getting Artist");
-                    const artists = [await discogs.getArtist("557974")];
+                    const artistId = "5762374";
+                    console.log(
+                        "Fetching Artist " + artistId + " from Discogs",
+                    );
+                    const artists = [await discogs.getArtist(artistId)];
 
                     artists.forEach((_artist) => {
                         realm.write(() => {
@@ -146,10 +180,10 @@ const ArtistsScreen = ({navigation}: any): Node => {
 
                                 if (
                                     duration < 30 * 60 &&
-                                    ((tracks.length < 3 &&
+                                    ((tracks.length <= 3 &&
                                         maxDuration >= 10 * 60) ||
-                                        (tracks.length > 3 &&
-                                            tracks.length < 7))
+                                        (tracks.length >= 4 &&
+                                            tracks.length <= 6))
                                 ) {
                                     const release = realm.create(
                                         "EP",
@@ -161,7 +195,7 @@ const ArtistsScreen = ({navigation}: any): Node => {
                                     artist.eps.push(release);
                                 } else if (
                                     duration < 30 * 60 &&
-                                    tracks.length < 3
+                                    tracks.length <= 3
                                 ) {
                                     const release = realm.create(
                                         "Single",

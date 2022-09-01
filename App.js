@@ -17,7 +17,7 @@ import {
     ArtistsScreen,
     ArtistDetailsScreen,
     AlbumsScreen,
-    AlbumDetailsScreen,
+    ReleaseDetailsScreen,
 } from "./app/screens";
 
 import RealmContext from "./app/data/realm";
@@ -41,8 +41,8 @@ const App = (): Node => {
                     />
                     <stack.Screen name="Albums" component={AlbumsScreen} />
                     <stack.Screen
-                        name="AlbumDetails"
-                        component={AlbumDetailsScreen}
+                        name="ReleaseDetails"
+                        component={ReleaseDetailsScreen}
                     />
                 </stack.Navigator>
             </NavigationContainer>

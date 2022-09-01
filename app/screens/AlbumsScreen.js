@@ -62,7 +62,8 @@ const AlbumsScreen = ({navigation}: any): Node => {
                 renderItem={({item, index}) => (
                     <TouchableOpacity
                         onPress={() => {
-                            navigation.navigate("AlbumDetails", {
+                            navigation.navigate("ReleaseDetails", {
+                                schema: "Album",
                                 _id: item._id,
                             });
                         }}

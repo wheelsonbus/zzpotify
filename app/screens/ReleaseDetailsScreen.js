@@ -1,5 +1,5 @@
 /**
- * Album details screen
+ * Release details screen
  *
  * @format
  * @flow
@@ -15,12 +15,12 @@ import {patch, wheels} from "../components";
 import RealmContext from "../data/realm";
 const {useObject} = RealmContext;
 
-const AlbumDetailsScreen = ({route, navigation}: any): Node => {
-    const {_id} = route.params;
-    const album = useObject("Album", _id);
+const ReleaseDetailsScreen = ({route, navigation}: any): Node => {
+    const {schema, _id} = route.params;
+    const release = useObject(schema, _id);
 
     const [coverAspectRatio, setCoverAspectRatio] = useState(1);
-    Image.getSize(album.cover, (width, height) => {
+    Image.getSize(release.cover, (width, height) => {
         setCoverAspectRatio(width / height);
     });
 
@@ -35,7 +35,7 @@ const AlbumDetailsScreen = ({route, navigation}: any): Node => {
                 ListHeaderComponent={() => (
                     <View>
                         <Image
-                            source={{uri: album.cover}}
+                            source={{uri: release.cover}}
                             style={{
                                 width: "100%",
                                 height: undefined,
@@ -59,7 +59,7 @@ const AlbumDetailsScreen = ({route, navigation}: any): Node => {
                                         color: "white",
                                     }}
                                 >
-                                    {album.title}
+                                    {release.title}
                                 </Text>
                                 <Text
                                     numberOfLines={1}
@@ -68,16 +68,16 @@ const AlbumDetailsScreen = ({route, navigation}: any): Node => {
                                         color: "white",
                                     }}
                                 >
-                                    {album.artist[0].name +
+                                    {release.artist[0].name +
                                         " (" +
-                                        album.date +
+                                        release.date +
                                         ")"}
                                 </Text>
                             </View>
                         </View>
                     </View>
                 )}
-                data={album.tracks}
+                data={release.tracks}
                 keyExtractor={(item): string => item._id}
                 renderItem={({item, index}) => (
                     <View
@@ -147,11 +147,11 @@ const AlbumDetailsScreen = ({route, navigation}: any): Node => {
                         opacity: 0,
                     }}
                 >
-                    Album Details
+                    Release Details
                 </Text>
             </View>
         </patch.SafeAreaView>
     );
 };
 
-export default AlbumDetailsScreen;
+export default ReleaseDetailsScreen;

@@ -9,12 +9,12 @@ import WelcomeScreen from "./WelcomeScreen";
 import ArtistsScreen from "./ArtistsScreen";
 import ArtistDetailsScreen from "./ArtistDetailsScreen";
 import AlbumsScreen from "./AlbumsScreen";
-import AlbumDetailsScreen from "./AlbumDetailsScreen";
+import ReleaseDetailsScreen from "./ReleaseDetailsScreen";
 
 export {
     WelcomeScreen,
     ArtistsScreen,
     ArtistDetailsScreen,
     AlbumsScreen,
-    AlbumDetailsScreen,
+    ReleaseDetailsScreen,
 };
