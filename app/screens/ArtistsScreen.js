@@ -5,15 +5,15 @@
  * @flow
  */
 
-import React, {useCallback, useMemo} from "react";
+import React, {useState, useMemo} from "react";
 import type {Node} from "react";
-import {View, FlatList, Text, Image} from "react-native";
-import {Spotify} from "@wheelsonbus/abstract-music";
+import {View, FlatList, Text, Image, TouchableOpacity} from "react-native";
+import {Discogs} from "@wheelsonbus/abstract-music";
 
 import {assets, theme} from "../constants";
 import {patch, wheels} from "../components";
 
-import RealmContext, {Artist, Album, Track} from "../data/realm";
+import RealmContext, {Artist, Album, EP, Single, Track} from "../data/realm";
 const {useRealm, useQuery} = RealmContext;
 
 const ArtistsScreen = ({navigation}: any): Node => {
@@ -61,7 +61,12 @@ const ArtistsScreen = ({navigation}: any): Node => {
                 data={artists}
                 keyExtractor={(item): string => item._id}
                 renderItem={({item, index}) => (
-                    <View
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigation.navigate("ArtistDetails", {
+                                _id: item._id,
+                            });
+                        }}
                         style={{
                             flex: 1,
                             flexDirection: "row",
@@ -72,16 +77,7 @@ const ArtistsScreen = ({navigation}: any): Node => {
                                     : theme.palette.background2,
                         }}
                     >
-                        <Image
-                            source={{uri: item.image}}
-                            resizeMode="cover"
-                            style={{
-                                width: undefined,
-                                height: "100%",
-                                aspectRatio: 1 / 1,
-                            }}
-                        />
-                        <View style={{flex: 1, marginLeft: 16}}>
+                        <View style={{flex: 1}}>
                             <Text
                                 numberOfLines={1}
                                 style={{
@@ -102,50 +98,85 @@ const ArtistsScreen = ({navigation}: any): Node => {
                                 {item.albums.length + " album(s)"}
                             </Text>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 )}
             />
 
             <wheels.CircleButton
                 icon={assets.icons.plus}
                 onPress={async () => {
-                    const spotify = await new Spotify(
-                        "9a5263c92d434136be3bd8fc840ae09f",
-                        "36dd19d4082c405d8f84b5b0a4994f98",
+                    const discogs = new Discogs(
+                        "WwcXlaiWIiJJDUpoVHXL",
+                        "tDkXKPEgaoCSdTPHSxSCdYKUhgdEmZiN",
                     );
-                    const artists = [
-                        await spotify.getArtist("4EhvF0sd1sdEJ49h6AuWvB"),
-                        await spotify.getArtist("0YMeriqrS3zgsX24nfY0F0"),
-                        await spotify.getArtist("0vEsuISMWAKNctLlUAhSZC"),
-                        await spotify.getArtist("0WwSkZ7LtFUFjGjMZBMt6T"),
-                        await spotify.getArtist("0k17h0D3J5VfsdmQ1iZtE9"),
-                        await spotify.getArtist("3JsMj0DEzyWc0VDlHuy9Bx"),
-                        await spotify.getArtist("0L8ExT028jH3ddEcZwqJJ5"),
-                        await spotify.getArtist("1w5Kfo2jwwIPruYS2UWh56"),
-                    ];
 
-                    realm.write(() => {
-                        artists.forEach((artist) => {
-                            const artistData = realm.create(
+                    console.log("Getting Artist");
+                    const artists = [await discogs.getArtist("557974")];
+
+                    artists.forEach((_artist) => {
+                        realm.write(() => {
+                            const artist = realm.create(
                                 "Artist",
-                                Artist.generate(artist),
+                                Artist.generate(_artist),
                             );
 
-                            artist.albums.forEach((album) => {
-                                const albumData = realm.create(
-                                    "Album",
-                                    Album.generate(album),
-                                );
-
-                                album.tracks.forEach((track) => {
-                                    const trackData = realm.create(
-                                        "Track",
-                                        Track.generate(track),
+                            _artist.releases.forEach((_release) => {
+                                let tracks = [];
+                                let duration = 0;
+                                let maxDuration = 0;
+                                _release.tracks.forEach((_track) => {
+                                    tracks.push(
+                                        realm.create(
+                                            "Track",
+                                            Track.generate(_track),
+                                        ),
                                     );
-                                    albumData.tracks.push(trackData);
+                                    duration += _track.duration;
+                                    maxDuration = Math.max(
+                                        _track.duration,
+                                        maxDuration,
+                                    );
                                 });
-                                artistData.albums.push(albumData);
+
+                                if (
+                                    duration < 30 * 60 &&
+                                    ((tracks.length < 3 &&
+                                        maxDuration >= 10 * 60) ||
+                                        (tracks.length > 3 &&
+                                            tracks.length < 7))
+                                ) {
+                                    const release = realm.create(
+                                        "EP",
+                                        Album.generate(_release),
+                                    );
+                                    tracks.forEach((track) => {
+                                        release.tracks.push(track);
+                                    });
+                                    artist.eps.push(release);
+                                } else if (
+                                    duration < 30 * 60 &&
+                                    tracks.length < 3
+                                ) {
+                                    const release = realm.create(
+                                        "Single",
+                                        Album.generate(_release),
+                                    );
+                                    tracks.forEach((track) => {
+                                        release.tracks.push(track);
+                                    });
+                                    artist.singles.push(release);
+                                } else {
+                                    const release = realm.create(
+                                        "Album",
+                                        Album.generate(_release),
+                                    );
+                                    tracks.forEach((track) => {
+                                        release.tracks.push(track);
+                                    });
+                                    artist.albums.push(release);
+                                }
                             });
+                            console.log(artist);
                         });
                     });
                 }}

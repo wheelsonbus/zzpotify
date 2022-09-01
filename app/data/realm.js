@@ -13,7 +13,6 @@ export class Artist {
         return {
             _id: uuid(),
             name: artist.name,
-            image: artist.image,
             albums: [],
         };
     }
@@ -24,8 +23,9 @@ export class Artist {
         properties: {
             _id: "string",
             name: "string",
-            image: "string",
             albums: "Album[]",
+            eps: "EP[]",
+            singles: "Single[]",
         },
     };
 }
@@ -59,11 +59,70 @@ export class Album {
     };
 }
 
+export class EP {
+    static generate(ep) {
+        return {
+            _id: uuid(),
+            title: ep.title,
+            date: ep.date,
+            cover: ep.cover,
+            tracks: [],
+        };
+    }
+
+    static schema = {
+        name: "EP",
+        primaryKey: "_id",
+        properties: {
+            _id: "string",
+            title: "string",
+            date: "string",
+            cover: "string",
+            tracks: "Track[]",
+            artist: {
+                type: "linkingObjects",
+                objectType: "Artist",
+                property: "eps",
+            },
+        },
+    };
+}
+
+export class Single {
+    static generate(single) {
+        return {
+            _id: uuid(),
+            title: single.title,
+            date: single.date,
+            cover: single.cover,
+            tracks: [],
+        };
+    }
+
+    static schema = {
+        name: "Single",
+        primaryKey: "_id",
+        properties: {
+            _id: "string",
+            title: "string",
+            date: "string",
+            cover: "string",
+            tracks: "Track[]",
+            artist: {
+                type: "linkingObjects",
+                objectType: "Artist",
+                property: "singles",
+            },
+        },
+    };
+}
+
 export class Track {
     static generate(track) {
         return {
             _id: uuid(),
             title: track.title,
+            duration: track.duration,
         };
     }
 
@@ -73,15 +132,17 @@ export class Track {
         properties: {
             _id: "string",
             title: "string",
-            album: {
-                type: "linkingObjects",
-                objectType: "Album",
-                property: "tracks",
-            },
+            duration: "int",
         },
     };
 }
 
 export default createRealmContext({
-    schema: [Artist.schema, Album.schema, Track.schema],
+    schema: [
+        Artist.schema,
+        Album.schema,
+        EP.schema,
+        Single.schema,
+        Track.schema,
+    ],
 });

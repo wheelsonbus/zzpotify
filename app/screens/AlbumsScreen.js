@@ -78,7 +78,7 @@ const AlbumsScreen = ({navigation}: any): Node => {
                     >
                         <Image
                             source={{uri: item.cover}}
-                            resizeMode="cover"
+                            resizeMode="contain"
                             style={{
                                 width: undefined,
                                 height: "100%",

@@ -5,9 +5,9 @@
  * @flow
  */
 
-import React, {useState} from "react";
+import React from "react";
 import type {Node} from "react";
-import {View, FlatList, Text, Image} from "react-native";
+import {View, FlatList, Text, Image, TouchableOpacity} from "react-native";
 
 import {theme, assets} from "../constants";
 import {patch, wheels} from "../components";
@@ -15,14 +15,9 @@ import {patch, wheels} from "../components";
 import RealmContext from "../data/realm";
 const {useObject} = RealmContext;
 
-const AlbumDetailsScreen = ({route, navigation}: any): Node => {
+const ArtistDetailsScreen = ({route, navigation}: any): Node => {
     const {_id} = route.params;
-    const album = useObject("Album", _id);
-
-    const [coverAspectRatio, setCoverAspectRatio] = useState(1);
-    Image.getSize(album.cover, (width, height) => {
-        setCoverAspectRatio(width / height);
-    });
+    const artist = useObject("Artist", _id);
 
     return (
         <patch.SafeAreaView
@@ -35,11 +30,15 @@ const AlbumDetailsScreen = ({route, navigation}: any): Node => {
                 ListHeaderComponent={() => (
                     <View>
                         <Image
-                            source={{uri: album.cover}}
+                            source={
+                                {
+                                    /* Mosaic of album covers? */
+                                }
+                            }
                             style={{
                                 width: "100%",
                                 height: undefined,
-                                aspectRatio: coverAspectRatio,
+                                aspectRatio: 1 / 1,
                             }}
                         />
                         <View
@@ -59,28 +58,21 @@ const AlbumDetailsScreen = ({route, navigation}: any): Node => {
                                         color: "white",
                                     }}
                                 >
-                                    {album.title}
-                                </Text>
-                                <Text
-                                    numberOfLines={1}
-                                    style={{
-                                        fontSize: 16,
-                                        color: "white",
-                                    }}
-                                >
-                                    {album.artist[0].name +
-                                        " (" +
-                                        album.date +
-                                        ")"}
+                                    {artist.name}
                                 </Text>
                             </View>
                         </View>
                     </View>
                 )}
-                data={album.tracks}
+                data={artist.albums}
                 keyExtractor={(item): string => item._id}
                 renderItem={({item, index}) => (
-                    <View
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigation.navigate("AlbumDetails", {
+                                _id: item._id,
+                            });
+                        }}
                         style={{
                             flex: 1,
                             flexDirection: "row",
@@ -91,19 +83,33 @@ const AlbumDetailsScreen = ({route, navigation}: any): Node => {
                                     : theme.palette.background2,
                         }}
                     >
-                        <View>
+                        <Image
+                            source={{
+                                uri: item.cover,
+                            }}
+                            resizeMode="contain"
+                            style={{
+                                width: undefined,
+                                height: "100%",
+                                aspectRatio: 1 / 1,
+                            }}
+                        />
+                        <View
+                            style={{
+                                flex: 1,
+                                marginLeft: 16,
+                            }}
+                        >
                             <Text
+                                numberOfLines={1}
                                 style={{
                                     fontSize: 16,
                                     fontWeight: "bold",
                                     color: "white",
                                 }}
                             >
-                                {(index + 1).toString().padStart(2, "0")}
+                                {item.title}
                             </Text>
-                        </View>
-
-                        <View style={{flex: 1, marginLeft: 16}}>
                             <Text
                                 numberOfLines={1}
                                 style={{
@@ -111,10 +117,19 @@ const AlbumDetailsScreen = ({route, navigation}: any): Node => {
                                     color: "white",
                                 }}
                             >
-                                {item.title}
+                                {item.date}
+                            </Text>
+                            <Text
+                                numberOfLines={1}
+                                style={{
+                                    fontSize: 16,
+                                    color: "white",
+                                }}
+                            >
+                                {item.tracks.length + " track(s)"}
                             </Text>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 )}
             />
 
@@ -147,11 +162,11 @@ const AlbumDetailsScreen = ({route, navigation}: any): Node => {
                         opacity: 0,
                     }}
                 >
-                    Album Details
+                    Artist Details
                 </Text>
             </View>
         </patch.SafeAreaView>
     );
 };
 
-export default AlbumDetailsScreen;
+export default ArtistDetailsScreen;

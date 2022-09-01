@@ -15,6 +15,7 @@ import {patch} from "./app/components";
 import {
     WelcomeScreen,
     ArtistsScreen,
+    ArtistDetailsScreen,
     AlbumsScreen,
     AlbumDetailsScreen,
 } from "./app/screens";
@@ -34,6 +35,10 @@ const App = (): Node => {
                 >
                     <stack.Screen name="Welcome" component={WelcomeScreen} />
                     <stack.Screen name="Artists" component={ArtistsScreen} />
+                    <stack.Screen
+                        name="ArtistDetails"
+                        component={ArtistDetailsScreen}
+                    />
                     <stack.Screen name="Albums" component={AlbumsScreen} />
                     <stack.Screen
                         name="AlbumDetails"
