@@ -2,7 +2,6 @@
  * Constants index
  *
  * @format
- * @flow
  */
 
 import patch from "./patch";

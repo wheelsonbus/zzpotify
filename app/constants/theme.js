@@ -2,7 +2,6 @@
  * Theme constants object
  *
  * @format
- * @flow
  */
 
 const theme = {

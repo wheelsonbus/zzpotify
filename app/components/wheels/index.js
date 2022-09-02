@@ -2,7 +2,6 @@
  * Wheels component index
  *
  * @format
- * @flow
  */
 
 import SpanButton from "./SpanButton";

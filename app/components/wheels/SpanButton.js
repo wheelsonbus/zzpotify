@@ -2,14 +2,13 @@
  * SpanButton component
  *
  * @format
- * @flow
  */
 
 import React from "react";
 import type {Node} from "react";
 import {Text, TouchableOpacity} from "react-native";
 
-const SpanButton = ({text, onPress, style}: Object): Node => {
+const SpanButton = ({text, onPress, style}) => {
     return (
         <TouchableOpacity
             onPress={onPress}

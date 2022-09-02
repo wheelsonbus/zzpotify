@@ -2,7 +2,6 @@
  * Release details screen
  *
  * @format
- * @flow
  */
 
 import React, {useState} from "react";
@@ -15,7 +14,7 @@ import {patch, wheels} from "../components";
 import RealmContext from "../data/realm";
 const {useObject} = RealmContext;
 
-const ReleaseDetailsScreen = ({route, navigation}: any): Node => {
+const ReleaseDetailsScreen = ({route, navigation}) => {
     const {_id} = route.params;
     const release = useObject("Release", _id);
 
@@ -78,7 +77,7 @@ const ReleaseDetailsScreen = ({route, navigation}: any): Node => {
                     </View>
                 )}
                 data={release.tracks}
-                keyExtractor={(item): string => item._id}
+                keyExtractor={(item) => item._id}
                 renderItem={({item, index}) => (
                     <View
                         style={{

@@ -2,7 +2,6 @@
  * Welcome screen
  *
  * @format
- * @flow
  */
 
 import React from "react";
@@ -12,7 +11,7 @@ import {Image} from "react-native";
 import {theme, assets} from "../constants";
 import {patch, wheels} from "../components";
 
-const WelcomeScreen = ({navigation}: any): Node => {
+const WelcomeScreen = ({navigation}) => {
     return (
         <patch.SafeAreaView
             style={{

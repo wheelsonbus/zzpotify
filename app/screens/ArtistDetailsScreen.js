@@ -2,7 +2,6 @@
  * Album details screen
  *
  * @format
- * @flow
  */
 
 import React from "react";
@@ -15,7 +14,7 @@ import {patch, wheels} from "../components";
 import RealmContext from "../data/realm";
 const {useObject} = RealmContext;
 
-const ArtistDetailsScreen = ({route, navigation}: any): Node => {
+const ArtistDetailsScreen = ({route, navigation}) => {
     const {_id} = route.params;
     const artist = useObject("Artist", _id);
     const albums = artist.releases.filtered("type == 'album'");
@@ -35,7 +34,7 @@ const ArtistDetailsScreen = ({route, navigation}: any): Node => {
                     {title: "EPs", data: eps},
                     {title: "Singles", data: singles},
                 ]}
-                keyExtractor={(item): string => item._id}
+                keyExtractor={(item) => item._id}
                 ListHeaderComponent={() => {
                     let subtitle = [];
                     if (albums.length) {

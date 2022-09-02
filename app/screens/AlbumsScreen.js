@@ -2,7 +2,6 @@
  * Albums screen
  *
  * @format
- * @flow
  */
 
 import React, {useMemo} from "react";
@@ -15,7 +14,7 @@ import {patch, wheels} from "../components";
 import RealmContext from "../data/realm";
 const {useQuery} = RealmContext;
 
-const AlbumsScreen = ({navigation}: any): Node => {
+const AlbumsScreen = ({navigation}) => {
     const albumQuery = useQuery("Release");
     const albums = useMemo(() => albumQuery, [albumQuery]);
 
@@ -58,7 +57,7 @@ const AlbumsScreen = ({navigation}: any): Node => {
 
             <FlatList
                 data={albums}
-                keyExtractor={(item): string => item._id}
+                keyExtractor={(item) => item._id}
                 renderItem={({item, index}) => (
                     <TouchableOpacity
                         onPress={() => {

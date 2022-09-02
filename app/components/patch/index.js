@@ -2,7 +2,6 @@
  * Patch component index
  *
  * @format
- * @flow
  */
 
 import SafeAreaView from "./SafeAreaView";

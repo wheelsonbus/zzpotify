@@ -2,14 +2,13 @@
  * CircleButton component
  *
  * @format
- * @flow
  */
 
 import React from "react";
 import type {Node} from "react";
 import {Image, TouchableOpacity} from "react-native";
 
-const CircleButton = ({size = 80, icon, onPress, style}: any): Node => {
+const CircleButton = ({size = 80, icon, onPress, style}) => {
     return (
         <TouchableOpacity
             onPress={onPress}

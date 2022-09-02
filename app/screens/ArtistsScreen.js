@@ -2,7 +2,6 @@
  * Artists screen
  *
  * @format
- * @flow
  */
 
 import React, {useState, useMemo} from "react";
@@ -16,7 +15,7 @@ import {patch, wheels} from "../components";
 import RealmContext, {Artist, Release, Track} from "../data/realm";
 const {useRealm, useQuery} = RealmContext;
 
-const ArtistsScreen = ({navigation}: any): Node => {
+const ArtistsScreen = ({navigation}) => {
     const realm = useRealm();
     const artistQuery = useQuery("Artist");
     const artists = useMemo(() => artistQuery.sorted("name"), [artistQuery]);
@@ -59,7 +58,7 @@ const ArtistsScreen = ({navigation}: any): Node => {
             </View>
             <FlatList
                 data={artists}
-                keyExtractor={(item): string => item._id}
+                keyExtractor={(item) => item._id}
                 renderItem={({item, index}) => {
                     let subtitle = [];
                     if (item.releases.length) {
@@ -123,11 +122,17 @@ const ArtistsScreen = ({navigation}: any): Node => {
                         "tDkXKPEgaoCSdTPHSxSCdYKUhgdEmZiN",
                     );
 
-                    const artistId = "557974";
-                    console.log(
-                        "Fetching Artist " + artistId + " from Discogs",
-                    );
-                    const artists = [await discogs.getArtist(artistId)];
+                    console.log("Fetching artists");
+                    const artists = [
+                        await discogs.getArtist("557974"),
+                        await discogs.getArtist("29735"),
+                        await discogs.getArtist("262643"),
+                        await discogs.getArtist("562858"),
+                        await discogs.getArtist("5762374"),
+                        await discogs.getArtist("254479"),
+                        await discogs.getArtist("175395"),
+                        await discogs.getArtist("1871196"),
+                    ];
 
                     artists.forEach((_artist) => {
                         realm.write(() => {

@@ -2,7 +2,6 @@
  * zzpotify: abstract your music
  *
  * @format
- * @flow
  */
 
 import React from "react";
@@ -25,7 +24,7 @@ const {RealmProvider} = RealmContext;
 
 const stack = createNativeStackNavigator();
 
-const App = (): Node => {
+const App = () => {
     return (
         <RealmProvider>
             <NavigationContainer>

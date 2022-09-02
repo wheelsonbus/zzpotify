@@ -2,7 +2,6 @@
  * Screens index
  *
  * @format
- * @flow
  */
 
 import WelcomeScreen from "./WelcomeScreen";
