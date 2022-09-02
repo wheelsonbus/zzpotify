@@ -31,7 +31,6 @@ export class Artist {
 export class Release {
     static generate(release) {
         let type = release.type;
-
         if (type == null) {
             let duration = 0;
             let maxDuration = 0;
