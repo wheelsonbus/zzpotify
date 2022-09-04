@@ -151,11 +151,6 @@ const FetchArtistButton = () => {
         }, []),
     );
 
-    useEffect(() => {
-        console.log("Updated data:");
-        console.log(data);
-    }, [data]);
-
     return (
         <wheels.CircleButton
             icon={assets.icons.plus}
