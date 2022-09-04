@@ -4,7 +4,7 @@
  * @format
  */
 
-import React from "react";
+import React, {useMemo} from "react";
 import type {Node} from "react";
 import {View, SectionList, Text, Image, TouchableOpacity} from "react-native";
 
@@ -17,9 +17,73 @@ const {useObject} = RealmContext;
 const ArtistDetailsScreen = ({route, navigation}) => {
     const {_id} = route.params;
     const artist = useObject("Artist", _id);
-    const albums = artist.releases.filtered("type == 'album'");
-    const eps = artist.releases.filtered("type == 'ep'");
-    const singles = artist.releases.filtered("type == 'single'");
+    const albums = useMemo(
+        () => artist.releases.filtered("type == 'album'"),
+        [artist],
+    );
+    const eps = useMemo(
+        () => artist.releases.filtered("type == 'ep'"),
+        [artist],
+    );
+    const singles = useMemo(
+        () => artist.releases.filtered("type == 'single'"),
+        [artist],
+    );
+    const covers = useMemo(() => {
+        let c = [];
+        for (const release of artist.releases) {
+            if (release.cover) {
+                c.push(release.cover);
+            }
+        }
+        c = c.sort(() => 0.5 - Math.random()).splice(0, 4);
+        switch (c.length) {
+            case 0:
+                c = ["", "", "", ""];
+                break;
+            case 1:
+                c = [c[0], c[0], c[0], c[0]];
+                break;
+            case 2:
+            case 3:
+                c = [c[0], c[1], c[0], c[1]];
+                break;
+        }
+
+        return c;
+    }, [artist]);
+
+    const subtitle = useMemo(() => {
+        let s = [];
+        if (albums.length) {
+            if (albums.length == 1) {
+                s.push("1 album");
+            } else {
+                s.push(albums.length + " albums");
+            }
+        }
+        if (eps.length) {
+            if (eps.length == 1) {
+                s.push("1 EP");
+            } else {
+                s.push(eps.length + " EPs");
+            }
+        }
+        if (singles.length) {
+            if (singles.length == 1) {
+                s.push("1 single");
+            } else {
+                s.push(singles.length + " singles");
+            }
+        }
+
+        if (!s.length) {
+            s = "No releases";
+        } else {
+            s = s.join("    ");
+        }
+        return s;
+    }, [albums, eps, singles]);
 
     return (
         <patch.SafeAreaView
@@ -35,83 +99,121 @@ const ArtistDetailsScreen = ({route, navigation}) => {
                     {title: "Singles", data: singles},
                 ]}
                 keyExtractor={(item) => item._id}
-                ListHeaderComponent={() => {
-                    let subtitle = [];
-                    if (albums.length) {
-                        if (albums.length == 1) {
-                            subtitle.push("1 album");
-                        } else {
-                            subtitle.push(albums.length + " albums");
-                        }
-                    }
-                    if (eps.length) {
-                        if (eps.length == 1) {
-                            subtitle.push("1 EP");
-                        } else {
-                            subtitle.push(eps.length + " EPs");
-                        }
-                    }
-                    if (singles.length) {
-                        if (singles.length == 1) {
-                            subtitle.push("1 single");
-                        } else {
-                            subtitle.push(singles.length + " singles");
-                        }
-                    }
-
-                    if (!subtitle.length) {
-                        subtitle = "No releases";
-                    } else {
-                        subtitle = subtitle.join("    ");
-                    }
-
-                    return (
-                        <View>
-                            <Image
-                                source={
-                                    {
-                                        /* Mosaic of album covers? */
-                                    }
-                                }
-                                style={{
-                                    width: "100%",
-                                    height: undefined,
-                                    aspectRatio: 1 / 1,
-                                }}
-                            />
-                            <View
-                                style={{
-                                    width: "100%",
-                                    flex: 1,
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <View style={{flex: 1, margin: 16}}>
-                                    <Text
-                                        numberOfLines={1}
+                ListHeaderComponent={() => (
+                    <View>
+                        <View
+                            style={{
+                                flex: 1,
+                                width: "100%",
+                                height: undefined,
+                                aspectRatio: 1 / 1,
+                            }}
+                        >
+                            <View style={{flex: 1, flexDirection: "row"}}>
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        overflow: "hidden",
+                                    }}
+                                >
+                                    <Image
+                                        source={{uri: covers[0]}}
                                         style={{
-                                            fontSize: 36,
-                                            fontWeight: "bold",
-                                            color: "white",
+                                            width: "200%",
+                                            height: "200%",
+                                            position: "absolute",
+                                            top: 0,
+                                            left: 0,
                                         }}
-                                    >
-                                        {artist.name}
-                                    </Text>
-                                    <Text
-                                        numberOfLines={1}
+                                    />
+                                </View>
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        overflow: "hidden",
+                                    }}
+                                >
+                                    <Image
+                                        source={{uri: covers[1]}}
                                         style={{
-                                            fontSize: 16,
-                                            color: "white",
+                                            width: "200%",
+                                            height: "200%",
+                                            position: "absolute",
+                                            top: 0,
+                                            right: 0,
                                         }}
-                                    >
-                                        {subtitle}
-                                    </Text>
+                                    />
+                                </View>
+                            </View>
+                            <View style={{flex: 1, flexDirection: "row"}}>
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        overflow: "hidden",
+                                    }}
+                                >
+                                    <Image
+                                        source={{uri: covers[2]}}
+                                        style={{
+                                            width: "200%",
+                                            height: "200%",
+                                            position: "absolute",
+                                            bottom: 0,
+                                            left: 0,
+                                        }}
+                                    />
+                                </View>
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        overflow: "hidden",
+                                    }}
+                                >
+                                    <Image
+                                        source={{uri: covers[3]}}
+                                        style={{
+                                            width: "200%",
+                                            height: "200%",
+                                            position: "absolute",
+                                            bottom: 0,
+                                            right: 0,
+                                        }}
+                                    />
                                 </View>
                             </View>
                         </View>
-                    );
-                }}
+                        <View
+                            style={{
+                                width: "100%",
+                                flex: 1,
+                                flexDirection: "row",
+                                alignItems: "center",
+                            }}
+                        >
+                            <View style={{flex: 1, margin: 16}}>
+                                <Text
+                                    numberOfLines={1}
+                                    style={{
+                                        fontSize: 36,
+                                        fontWeight: "bold",
+                                        color: "white",
+                                    }}
+                                >
+                                    {artist.name}
+                                </Text>
+                                <Text
+                                    numberOfLines={1}
+                                    style={{
+                                        fontSize: 16,
+                                        color: "white",
+                                    }}
+                                >
+                                    {subtitle}
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                )}
                 renderSectionHeader={({section}) =>
                     !section.data.length ? null : (
                         <View style={{flex: 1, margin: 16}}>

@@ -12,7 +12,8 @@ const SafeAreaView = (props) => {
     return (
         <_SafeAreaView
             style={{
-                marginTop: 8,
+                marginTop:
+                    Platform.OS === "android" ? StatusBar.currentHeight : 0,
             }}
             {...props}
         />

@@ -4,16 +4,17 @@
  * @format
  */
 
-import React, {useState, useMemo} from "react";
+import React, {useState, useEffect, useMemo, useCallback} from "react";
 import type {Node} from "react";
 import {View, FlatList, Text, Image, TouchableOpacity} from "react-native";
-import {Discogs} from "@wheelsonbus/abstract-music";
 
 import {assets, theme} from "../constants";
 import {patch, wheels} from "../components";
 
 import RealmContext, {Artist, Release, Track} from "../data/realm";
 const {useRealm, useQuery} = RealmContext;
+
+import {useFetchArtist} from "../api/Discogs";
 
 const ArtistsScreen = ({navigation}) => {
     const realm = useRealm();
@@ -114,66 +115,60 @@ const ArtistsScreen = ({navigation}) => {
                 }}
             />
 
-            <wheels.CircleButton
-                icon={assets.icons.plus}
-                onPress={async () => {
-                    const discogs = new Discogs(
-                        "WwcXlaiWIiJJDUpoVHXL",
-                        "tDkXKPEgaoCSdTPHSxSCdYKUhgdEmZiN",
-                    );
-
-                    console.log("Fetching artists");
-                    const artists = [
-                        await discogs.getArtist("557974"),
-                        await discogs.getArtist("29735"),
-                        await discogs.getArtist("262643"),
-                        await discogs.getArtist("562858"),
-                        await discogs.getArtist("5762374"),
-                        await discogs.getArtist("254479"),
-                        await discogs.getArtist("175395"),
-                        await discogs.getArtist("1871196"),
-                    ];
-
-                    artists.forEach((_artist) => {
-                        realm.write(() => {
-                            const artist = realm.create(
-                                "Artist",
-                                Artist.generate(_artist),
-                            );
-
-                            _artist.releases.forEach((_release) => {
-                                Image.prefetch(_release.cover).catch(
-                                    (error) => {
-                                        console.error(error);
-                                    },
-                                );
-
-                                const release = realm.create(
-                                    "Release",
-                                    Release.generate(_release),
-                                );
-                                _release.tracks.forEach((_track) => {
-                                    const track = realm.create(
-                                        "Track",
-                                        Track.generate(_track),
-                                    );
-                                    release.tracks.push(track);
-                                });
-
-                                artist.releases.push(release);
-                            });
-                            console.log(artist);
-                        });
-                    });
-                }}
-                style={{
-                    backgroundColor: theme.palette.primary,
-                    position: "absolute",
-                    bottom: 16,
-                    right: 16,
-                }}
-            />
+            <FetchArtistButton />
         </patch.SafeAreaView>
+    );
+};
+
+const FetchArtistButton = () => {
+    const realm = useRealm();
+    const {fetchArtist, data, error, loading} = useFetchArtist(
+        useCallback(async (data) => {
+            if (data != null) {
+                realm.write(() => {
+                    const artist = realm.create(
+                        "Artist",
+                        Artist.generate(data),
+                    );
+                    for (const _release of data.releases) {
+                        const release = realm.create(
+                            "Release",
+                            Release.generate(_release),
+                        );
+                        for (const _track of _release.tracks) {
+                            const track = realm.create(
+                                "Track",
+                                Track.generate(_track),
+                            );
+                            release.tracks.push(track);
+                        }
+                        artist.releases.push(release);
+                    }
+                    console.log("Created Artist:");
+                    console.log(artist);
+                });
+            }
+        }, []),
+    );
+
+    useEffect(() => {
+        console.log("Updated data:");
+        console.log(data);
+    }, [data]);
+
+    return (
+        <wheels.CircleButton
+            icon={assets.icons.plus}
+            onPress={() => {
+                fetchArtist("272467");
+            }}
+            style={{
+                backgroundColor: theme.palette.primary,
+                position: "absolute",
+                bottom: 16,
+                right: 16,
+            }}
+        />
     );
 };
 
